@@ -1,5 +1,5 @@
-import { Drug, Pharmacy } from "./pharmacy";
-import { formatLog } from "./helper";
+import { Drug, Pharmacy } from './pharmacy.js';
+import { formatLog } from "./helper.js";
 
 import fs from "fs";
 
