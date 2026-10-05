@@ -1,5 +1,4 @@
-import { Drug } from "../Drug";
-import { Pharmacy } from "../Pharmacy";
+import { Drug, Pharmacy } from "../pharmacy";
 
 describe("Pharmacy", () => {
   describe("once the expiration date has passed, Benefit degrades twice as fast", () => {

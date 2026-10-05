@@ -1,5 +1,4 @@
-import Pharmacy from "./Pharmacy";
-import Drug from './Drug';
+import { Drug, Pharmacy } from "./pharmacy";
 import { formatLog } from "./helper";
 
 import fs from "fs";
