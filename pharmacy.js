@@ -1,95 +1,65 @@
-// Wish to move to a dedicated class, but not sure about the requirements, then it's still there
 export class Drug {
-    constructor(name, expiresIn, benefit) {
-        this.name = name;
-        this.expiresIn = expiresIn;
-        this.benefit = benefit;
-        this.decrementBenefitNumber = 1;
+  constructor(name, expiresIn, benefit) {
+    this.name = name;
+    this.expiresIn = expiresIn;
+    this.benefit = benefit;
+  }
+
+  decrementValues() {
+    if (this.name === "Magic Pill") return this;
+
+    if (this.name === "Herbal Tea") {
+      this.increaseBenefit();
+    } else if (this.name === "Fervex") {
+      if (this.expiresIn <= 0) {
+        this.benefit = 0;
+      } else {
+        this.increaseBenefit();
+      }
+    } else {
+      this.decrementBenefit();
     }
 
-    decrementValues() {
-        validate();
-        decrementExpiresIn();
-        decrementBenefit();
-    }
+    this.decrementExpiresIn();
+    return this;
+  }
 
-    validate() {
-        if (this.name === "Magic Pill") return;
-    }
+  decrementExpiresIn() {
+    this.expiresIn--;
+  }
 
-    decrementExpiresIn() {
-        if (this.expiresIn <= 0) return;
-        this.expiresIn--;
-        if (this.expiresIn <= 0) this.decrementBenefitNumber = 2;
-    }
+  decrementBenefit() {
+    this.benefit = Math.max(0, this.benefit - this.decreaseBenefitMapping());
+  }
 
-    decrementBenefit() {
-        if (this.benefit == 0) return;
-        this.benefit -= this.decrementBenefitNumber;
+  decreaseBenefitMapping() {
+    if (this.name === "Dafalgan") {
+      return this.expiresIn <= 0 ? 4 : 2;
     }
+    return this.expiresIn <= 0 ? 2 : 1;
+  }
 
-    increaseBenefit() {
-        if (this.benefit == 50) return;
-        this.benefit += this.incrementBenefitNumber;
+  increaseBenefit() {
+    this.benefit = Math.min(50, this.benefit + this.increaseBenefitMapping());
+  }
+
+  increaseBenefitMapping() {
+    if (this.name === "Fervex") {
+      if (this.expiresIn <= 5) return 3;
+      if (this.expiresIn <= 10) return 2;
     }
+    if (this.name === "Herbal Tea" && this.expiresIn <= 0) return 2;
+    return 1;
+  }
 }
 
-// Same, I would like to rename the class Pharmacy.js and make the class export default, but not sure about the requirements
 export class Pharmacy {
-    constructor(drugs = []) {
-        this.drugs = drugs;
-    }
-    updateBenefitValue() {
-        for (var i = 0; i < this.drugs.length; i++) {
-            if (
-                this.drugs[i].name != "Herbal Tea" &&
-                this.drugs[i].name != "Fervex"
-            ) {
-                if (this.drugs[i].benefit > 0) {
-                    if (this.drugs[i].name != "Magic Pill") {
-                        this.drugs[i].benefit = this.drugs[i].benefit - 1;
-                    }
-                }
-            } else {
-                if (this.drugs[i].benefit < 50) {
-                    this.drugs[i].benefit = this.drugs[i].benefit + 1;
-                    if (this.drugs[i].name == "Fervex") {
-                        if (this.drugs[i].expiresIn < 11) {
-                            if (this.drugs[i].benefit < 50) {
-                                this.drugs[i].benefit = this.drugs[i].benefit + 1;
-                            }
-                        }
-                        if (this.drugs[i].expiresIn < 6) {
-                            if (this.drugs[i].benefit < 50) {
-                                this.drugs[i].benefit = this.drugs[i].benefit + 1;
-                            }
-                        }
-                    }
-                }
-            }
-            if (this.drugs[i].name != "Magic Pill") {
-                this.drugs[i].expiresIn = this.drugs[i].expiresIn - 1;
-            }
-            if (this.drugs[i].expiresIn < 0) {
-                if (this.drugs[i].name != "Herbal Tea") {
-                    if (this.drugs[i].name != "Fervex") {
-                        if (this.drugs[i].benefit > 0) {
-                            if (this.drugs[i].name != "Magic Pill") {
-                                this.drugs[i].benefit = this.drugs[i].benefit - 1;
-                            }
-                        }
-                    } else {
-                        this.drugs[i].benefit =
-                            this.drugs[i].benefit - this.drugs[i].benefit;
-                    }
-                } else {
-                    if (this.drugs[i].benefit < 50) {
-                        this.drugs[i].benefit = this.drugs[i].benefit + 1;
-                    }
-                }
-            }
-        }
+  constructor(drugs = []) {
+    this.drugs = drugs;
+  }
 
-        return this.drugs;
-    }
+  updateBenefitValue() {
+    this.drugs.forEach((drug) => drug.decrementValues());
+    return this.drugs;
+  }
 }
